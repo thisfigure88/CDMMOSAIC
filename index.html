@@ -1,0 +1,613 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"> 
+    <title>Mosaic created by Nuclear Samurai</title>
+    <link rel="stylesheet" href="app/leaflet.css" />
+    <link rel="stylesheet" href="app/Control.FullScreen.css" />
+    <link rel="stylesheet" href="app/easy-button.css" />
+    <link rel="stylesheet" href="app/help-table.css" />
+    <link rel="stylesheet" href="app/leaflet-search.css" />
+    <style type="text/css">
+        html, body, #AndreaMosaic {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            background: black;
+        }
+    </style>
+</head>
+<body>
+    <div id="AndreaMosaic"></div>
+    <script src="app/leaflet.js"></script>
+    <script src="app/leafletzoom.js"></script>  
+    <script src="app/Control.FullScreen.js"></script>  
+    <script src="app/easy-button.js"></script>  
+    <script src="app/leaflet-search.js"></script>
+    <script type="application/javascript">
+        // TileArrays is an array of the tiles. It is needed for getPopUpText, getHelpText, getSearchText. Can be null.
+        // Each tileArray item has mandatory the first 4 elements defined as x,y,width,height in pixels of the tile position.
+        // Other elements in the array are optional and custom defined. See getTileObject.
+        // For mosaics with many tiles this array should have as few elements as possible or even not defined at all.
+        // With a very large amount of tiles it is suggested to store this list on the server and retrieve the tile 
+        // on demand in getTileObject.
+        var tileArrays = [
+			// tileX, tileY, tileWidth, tileHeight, tileNr, imageNr, imageUsageCount, imageUrl, imageName, imageExtension
+			[0,0,707,707,382,314,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (142).jpg","cdm (142)","jpg"],
+			[0,10605,353,707,149,120,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (20).jpg","cdm (20)","jpg"],
+			[0,11312,707,707,297,246,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (96).jpg","cdm (96)","jpg"],
+			[0,12019,353,707,28,22,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (351).jpg","cdm (351)","jpg"],
+			[0,12726,707,707,261,213,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (65).jpg","cdm (65)","jpg"],
+			[0,13433,353,707,306,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[0,1414,707,707,53,44,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (297).jpg","cdm (297)","jpg"],
+			[0,14140,707,2,344,281,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (108).jpg","cdm (108)","jpg"],
+			[0,2121,353,707,147,120,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (20).jpg","cdm (20)","jpg"],
+			[0,2828,707,707,227,188,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (259).jpg","cdm (259)","jpg"],
+			[0,3535,353,707,300,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[0,4242,707,707,384,314,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (142).jpg","cdm (142)","jpg"],
+			[0,4949,353,707,27,22,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (351).jpg","cdm (351)","jpg"],
+			[0,5656,707,707,266,217,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (53).jpg","cdm (53)","jpg"],
+			[0,6363,353,707,302,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[0,707,353,707,298,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[0,7070,707,707,54,44,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (297).jpg","cdm (297)","jpg"],
+			[0,7777,353,707,148,120,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (20).jpg","cdm (20)","jpg"],
+			[0,8484,707,707,267,217,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (53).jpg","cdm (53)","jpg"],
+			[0,9191,353,707,303,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[0,9898,707,707,310,249,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (38).jpg","cdm (38)","jpg"],
+			[10251,10605,707,707,91,75,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (296).jpg","cdm (296)","jpg"],
+			[10251,12019,707,707,395,323,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (17).jpg","cdm (17)","jpg"],
+			[10251,13433,707,707,247,204,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (77).jpg","cdm (77)","jpg"],
+			[10251,2121,707,707,210,171,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (23).jpg","cdm (23)","jpg"],
+			[10251,3535,707,707,60,48,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (290).jpg","cdm (290)","jpg"],
+			[10251,4949,707,707,340,277,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (123).jpg","cdm (123)","jpg"],
+			[10251,6363,707,707,363,298,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (115).jpg","cdm (115)","jpg"],
+			[10251,707,707,707,44,38,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (343).jpg","cdm (343)","jpg"],
+			[10251,7777,707,707,393,321,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (154).jpg","cdm (154)","jpg"],
+			[10251,9191,707,707,172,137,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (222).jpg","cdm (222)","jpg"],
+			[1060,10605,707,707,219,180,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (27).jpg","cdm (27)","jpg"],
+			[1060,12019,707,707,286,235,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (88).jpg","cdm (88)","jpg"],
+			[1060,13433,707,707,202,163,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (247).jpg","cdm (247)","jpg"],
+			[1060,2121,707,707,254,208,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (7).jpg","cdm (7)","jpg"],
+			[1060,3535,707,707,326,263,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (361).jpg","cdm (361)","jpg"],
+			[1060,4949,707,707,426,354,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (186).jpg","cdm (186)","jpg"],
+			[1060,6363,707,707,215,176,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (235).jpg","cdm (235)","jpg"],
+			[1060,707,707,707,429,357,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (182).jpg","cdm (182)","jpg"],
+			[1060,7777,707,707,17,13,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (350).jpg","cdm (350)","jpg"],
+			[1060,9191,707,707,241,198,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (72).jpg","cdm (72)","jpg"],
+			[10605,0,707,707,199,162,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (244).jpg","cdm (244)","jpg"],
+			[10605,11312,707,707,106,88,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (321).jpg","cdm (321)","jpg"],
+			[10605,12726,707,707,103,85,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (318).jpg","cdm (318)","jpg"],
+			[10605,1414,707,707,258,212,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (61).jpg","cdm (61)","jpg"],
+			[10605,14140,707,2,269,218,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (54).jpg","cdm (54)","jpg"],
+			[10605,2828,707,707,18,14,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (338).jpg","cdm (338)","jpg"],
+			[10605,4242,707,707,118,97,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (305).jpg","cdm (305)","jpg"],
+			[10605,5656,707,707,187,152,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (256).jpg","cdm (256)","jpg"],
+			[10605,7070,707,707,183,148,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (236).jpg","cdm (236)","jpg"],
+			[10605,8484,707,707,379,311,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (137).jpg","cdm (137)","jpg"],
+			[10605,9898,707,707,140,113,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (217).jpg","cdm (217)","jpg"],
+			[10958,10605,707,707,9,7,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (101).jpg","cdm (101)","jpg"],
+			[10958,12019,707,707,400,328,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (175).jpg","cdm (175)","jpg"],
+			[10958,13433,707,707,68,56,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (274).jpg","cdm (274)","jpg"],
+			[10958,2121,707,707,333,270,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (352).jpg","cdm (352)","jpg"],
+			[10958,3535,707,707,24,20,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (341).jpg","cdm (341)","jpg"],
+			[10958,4949,707,707,123,102,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (307).jpg","cdm (307)","jpg"],
+			[10958,6363,707,707,218,179,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (253).jpg","cdm (253)","jpg"],
+			[10958,707,707,707,203,164,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (230).jpg","cdm (230)","jpg"],
+			[10958,7777,707,707,131,109,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (196).jpg","cdm (196)","jpg"],
+			[10958,9191,707,707,59,47,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (271).jpg","cdm (271)","jpg"],
+			[11312,0,707,707,51,44,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (297).jpg","cdm (297)","jpg"],
+			[11312,11312,707,707,55,44,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (297).jpg","cdm (297)","jpg"],
+			[11312,12726,707,707,234,191,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (266).jpg","cdm (266)","jpg"],
+			[11312,1414,707,707,414,342,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (158).jpg","cdm (158)","jpg"],
+			[11312,14140,707,2,252,206,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (79).jpg","cdm (79)","jpg"],
+			[11312,2828,707,707,245,202,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (66).jpg","cdm (66)","jpg"],
+			[11312,4242,707,707,120,99,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (303).jpg","cdm (303)","jpg"],
+			[11312,5656,707,707,21,17,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (337).jpg","cdm (337)","jpg"],
+			[11312,7070,707,707,226,187,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (262).jpg","cdm (262)","jpg"],
+			[11312,8484,707,707,389,317,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (138).jpg","cdm (138)","jpg"],
+			[11312,9898,707,707,33,27,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (342).jpg","cdm (342)","jpg"],
+			[11665,10605,707,707,280,229,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (98).jpg","cdm (98)","jpg"],
+			[11665,12019,707,707,281,230,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (82).jpg","cdm (82)","jpg"],
+			[11665,13433,707,707,125,104,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (214).jpg","cdm (214)","jpg"],
+			[11665,2121,707,707,192,157,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (239).jpg","cdm (239)","jpg"],
+			[11665,3535,707,707,256,210,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (56).jpg","cdm (56)","jpg"],
+			[11665,4949,707,707,42,36,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (327).jpg","cdm (327)","jpg"],
+			[11665,6363,707,707,65,53,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (292).jpg","cdm (292)","jpg"],
+			[11665,707,707,707,189,154,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (257).jpg","cdm (257)","jpg"],
+			[11665,7777,707,707,406,334,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (155).jpg","cdm (155)","jpg"],
+			[11665,9191,707,707,407,335,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (168).jpg","cdm (168)","jpg"],
+			[12019,0,707,707,112,92,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (300).jpg","cdm (300)","jpg"],
+			[12019,11312,707,707,168,134,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (201).jpg","cdm (201)","jpg"],
+			[12019,12726,707,707,371,304,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (131).jpg","cdm (131)","jpg"],
+			[12019,1414,707,707,46,40,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (334).jpg","cdm (334)","jpg"],
+			[12019,14140,707,2,78,63,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (288).jpg","cdm (288)","jpg"],
+			[12019,2828,707,707,48,42,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (323).jpg","cdm (323)","jpg"],
+			[12019,4242,707,707,84,69,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (282).jpg","cdm (282)","jpg"],
+			[12019,5656,707,707,221,182,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (264).jpg","cdm (264)","jpg"],
+			[12019,7070,707,707,38,32,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (324).jpg","cdm (324)","jpg"],
+			[12019,8484,707,707,222,183,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (269).jpg","cdm (269)","jpg"],
+			[12019,9898,707,707,410,338,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (157).jpg","cdm (157)","jpg"],
+			[12372,10605,707,707,330,267,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (41).jpg","cdm (41)","jpg"],
+			[12372,12019,707,707,362,297,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (117).jpg","cdm (117)","jpg"],
+			[12372,13433,707,707,206,167,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (243).jpg","cdm (243)","jpg"],
+			[12372,2121,707,707,29,23,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (347).jpg","cdm (347)","jpg"],
+			[12372,3535,707,707,239,196,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (60).jpg","cdm (60)","jpg"],
+			[12372,4949,707,707,35,29,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (325).jpg","cdm (325)","jpg"],
+			[12372,6363,707,707,49,43,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (348).jpg","cdm (348)","jpg"],
+			[12372,707,707,707,89,74,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (293).jpg","cdm (293)","jpg"],
+			[12372,7777,707,707,242,199,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (73).jpg","cdm (73)","jpg"],
+			[12372,9191,707,707,325,262,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (359).jpg","cdm (359)","jpg"],
+			[12726,0,707,707,200,162,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (244).jpg","cdm (244)","jpg"],
+			[12726,11312,707,707,361,296,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (124).jpg","cdm (124)","jpg"],
+			[12726,12726,707,707,238,195,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (6).jpg","cdm (6)","jpg"],
+			[12726,1414,707,707,273,222,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (57).jpg","cdm (57)","jpg"],
+			[12726,14140,707,2,10,8,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (1).jpg","cdm (1)","jpg"],
+			[12726,2828,707,707,271,220,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (58).jpg","cdm (58)","jpg"],
+			[12726,4242,707,707,43,37,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (328).jpg","cdm (328)","jpg"],
+			[12726,5656,707,707,193,158,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (248).jpg","cdm (248)","jpg"],
+			[12726,7070,707,707,151,122,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (203).jpg","cdm (203)","jpg"],
+			[12726,8484,707,707,79,64,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (294).jpg","cdm (294)","jpg"],
+			[12726,9898,707,707,390,318,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (14).jpg","cdm (14)","jpg"],
+			[13079,10605,707,707,322,259,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (353).jpg","cdm (353)","jpg"],
+			[13079,12019,707,707,313,250,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (355).jpg","cdm (355)","jpg"],
+			[13079,13433,707,707,334,271,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (46).jpg","cdm (46)","jpg"],
+			[13079,2121,707,707,22,18,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (339).jpg","cdm (339)","jpg"],
+			[13079,3535,707,707,272,221,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (63).jpg","cdm (63)","jpg"],
+			[13079,4949,707,707,30,24,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (336).jpg","cdm (336)","jpg"],
+			[13079,6363,707,707,236,193,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (70).jpg","cdm (70)","jpg"],
+			[13079,707,707,707,224,185,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (265).jpg","cdm (265)","jpg"],
+			[13079,7777,707,707,132,110,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (198).jpg","cdm (198)","jpg"],
+			[13079,9191,707,707,116,95,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (312).jpg","cdm (312)","jpg"],
+			[13433,0,707,707,52,44,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (297).jpg","cdm (297)","jpg"],
+			[13433,11312,707,707,295,244,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (84).jpg","cdm (84)","jpg"],
+			[13433,12726,707,707,288,237,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (81).jpg","cdm (81)","jpg"],
+			[13433,1414,707,707,34,28,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (332).jpg","cdm (332)","jpg"],
+			[13433,14140,707,2,8,6,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (1).jpeg","cdm (1)","jpeg"],
+			[13433,2828,707,707,270,219,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (59).jpg","cdm (59)","jpg"],
+			[13433,4242,707,707,37,31,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (345).jpg","cdm (345)","jpg"],
+			[13433,5656,707,707,220,181,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (261).jpg","cdm (261)","jpg"],
+			[13433,7070,707,707,70,58,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (291).jpg","cdm (291)","jpg"],
+			[13433,8484,707,707,328,265,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (39).jpg","cdm (39)","jpg"],
+			[13433,9898,707,707,248,205,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (78).jpg","cdm (78)","jpg"],
+			[13786,10605,356,707,231,189,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (26).jpg","cdm (26)","jpg"],
+			[13786,12019,356,707,305,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[13786,13433,356,707,169,134,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (201).jpg","cdm (201)","jpg"],
+			[13786,2121,356,707,299,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[13786,3535,356,707,366,300,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (121).jpg","cdm (121)","jpg"],
+			[13786,4949,356,707,301,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[13786,6363,356,707,367,300,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (121).jpg","cdm (121)","jpg"],
+			[13786,707,356,707,164,134,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (201).jpg","cdm (201)","jpg"],
+			[13786,7777,356,707,166,134,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (201).jpg","cdm (201)","jpg"],
+			[13786,9191,356,707,304,247,9,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (36).jpg","cdm (36)","jpg"],
+			[1414,0,707,707,197,162,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (244).jpg","cdm (244)","jpg"],
+			[1414,11312,707,707,287,236,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (80).jpg","cdm (80)","jpg"],
+			[1414,12726,707,707,174,139,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (219).jpg","cdm (219)","jpg"],
+			[1414,1414,707,707,257,211,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (64).jpg","cdm (64)","jpg"],
+			[1414,14140,707,2,312,249,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (38).jpg","cdm (38)","jpg"],
+			[1414,2828,707,707,39,33,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (33).jpg","cdm (33)","jpg"],
+			[1414,4242,707,707,307,248,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (357).jpg","cdm (357)","jpg"],
+			[1414,5656,707,707,381,313,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (148).jpg","cdm (148)","jpg"],
+			[1414,7070,707,707,214,175,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (237).jpg","cdm (237)","jpg"],
+			[1414,8484,707,707,323,260,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (356).jpg","cdm (356)","jpg"],
+			[1414,9898,707,707,275,224,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (67).jpg","cdm (67)","jpg"],
+			[14140,0,2,707,430,358,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (18).jpg","cdm (18)","jpg"],
+			[14140,11312,2,707,435,358,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (18).jpg","cdm (18)","jpg"],
+			[14140,12726,2,707,138,111,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (200).jpg","cdm (200)","jpg"],
+			[14140,1414,2,707,133,111,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (200).jpg","cdm (200)","jpg"],
+			[14140,14140,2,2,386,314,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (142).jpg","cdm (142)","jpg"],
+			[14140,2828,2,707,431,358,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (18).jpg","cdm (18)","jpg"],
+			[14140,4242,2,707,134,111,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (200).jpg","cdm (200)","jpg"],
+			[14140,5656,2,707,433,358,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (18).jpg","cdm (18)","jpg"],
+			[14140,7070,2,707,136,111,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (200).jpg","cdm (200)","jpg"],
+			[14140,8484,2,707,434,358,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (18).jpg","cdm (18)","jpg"],
+			[14140,9898,2,707,137,111,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (200).jpg","cdm (200)","jpg"],
+			[1767,10605,707,707,36,30,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (333).jpg","cdm (333)","jpg"],
+			[1767,12019,707,707,204,165,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (249).jpg","cdm (249)","jpg"],
+			[1767,13433,707,707,315,252,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (37).jpg","cdm (37)","jpg"],
+			[1767,2121,707,707,255,209,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (68).jpg","cdm (68)","jpg"],
+			[1767,3535,707,707,173,138,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (224).jpg","cdm (224)","jpg"],
+			[1767,4949,707,707,85,70,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (286).jpg","cdm (286)","jpg"],
+			[1767,6363,707,707,19,15,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (329).jpg","cdm (329)","jpg"],
+			[1767,707,707,707,438,360,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (188).jpg","cdm (188)","jpg"],
+			[1767,7777,707,707,82,67,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (272).jpg","cdm (272)","jpg"],
+			[1767,9191,707,707,320,257,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (5).jpg","cdm (5)","jpg"],
+			[2121,0,707,707,383,314,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (142).jpg","cdm (142)","jpg"],
+			[2121,11312,707,707,348,283,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (111).jpg","cdm (111)","jpg"],
+			[2121,12726,707,707,376,308,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (143).jpg","cdm (143)","jpg"],
+			[2121,1414,707,707,327,264,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (4).jpg","cdm (4)","jpg"],
+			[2121,14140,707,2,345,281,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (108).jpg","cdm (108)","jpg"],
+			[2121,2828,707,707,351,286,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (12).jpg","cdm (12)","jpg"],
+			[2121,4242,707,707,107,89,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (31).jpg","cdm (31)","jpg"],
+			[2121,5656,707,707,45,39,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (326).jpg","cdm (326)","jpg"],
+			[2121,7070,707,707,67,55,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (275).jpg","cdm (275)","jpg"],
+			[2121,8484,707,707,41,35,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (346).jpg","cdm (346)","jpg"],
+			[2121,9898,707,707,397,325,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (171).jpg","cdm (171)","jpg"],
+			[2474,10605,707,707,175,140,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (225).jpg","cdm (225)","jpg"],
+			[2474,12019,707,707,159,130,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (211).jpg","cdm (211)","jpg"],
+			[2474,13433,707,707,23,19,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (340).jpg","cdm (340)","jpg"],
+			[2474,2121,707,707,196,161,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (24).jpg","cdm (24)","jpg"],
+			[2474,3535,707,707,349,284,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (127).jpg","cdm (127)","jpg"],
+			[2474,4949,707,707,104,86,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (32).jpg","cdm (32)","jpg"],
+			[2474,6363,707,707,176,141,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (226).jpg","cdm (226)","jpg"],
+			[2474,707,707,707,152,123,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (205).jpg","cdm (205)","jpg"],
+			[2474,7777,707,707,337,274,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (136).jpg","cdm (136)","jpg"],
+			[2474,9191,707,707,235,192,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (268).jpg","cdm (268)","jpg"],
+			[2828,0,707,707,260,213,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (65).jpg","cdm (65)","jpg"],
+			[2828,11312,707,707,88,73,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (284).jpg","cdm (284)","jpg"],
+			[2828,12726,707,707,184,149,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (254).jpg","cdm (254)","jpg"],
+			[2828,1414,707,707,316,253,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (47).jpg","cdm (47)","jpg"],
+			[2828,14140,707,2,403,331,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (15).jpg","cdm (15)","jpg"],
+			[2828,2828,707,707,47,41,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (335).jpg","cdm (335)","jpg"],
+			[2828,4242,707,707,233,190,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (260).jpg","cdm (260)","jpg"],
+			[2828,5656,707,707,373,306,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (139).jpg","cdm (139)","jpg"],
+			[2828,7070,707,707,181,146,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (228).jpg","cdm (228)","jpg"],
+			[2828,8484,707,707,80,65,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (295).jpg","cdm (295)","jpg"],
+			[2828,9898,707,707,415,343,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (156).jpg","cdm (156)","jpg"],
+			[3181,10605,707,707,130,108,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (208).jpg","cdm (208)","jpg"],
+			[3181,12019,707,707,408,336,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (159).jpg","cdm (159)","jpg"],
+			[3181,13433,707,707,364,299,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (11).jpg","cdm (11)","jpg"],
+			[3181,2121,707,707,388,316,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (147).jpg","cdm (147)","jpg"],
+			[3181,3535,707,707,154,125,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (194).jpg","cdm (194)","jpg"],
+			[3181,4949,707,707,66,54,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (287).jpg","cdm (287)","jpg"],
+			[3181,6363,707,707,185,150,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (240).jpg","cdm (240)","jpg"],
+			[3181,707,707,707,124,103,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (209).jpg","cdm (209)","jpg"],
+			[3181,7777,707,707,11,9,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (10).jpg","cdm (10)","jpg"],
+			[3181,9191,707,707,354,289,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (114).jpg","cdm (114)","jpg"],
+			[353,10605,707,707,95,77,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (309).jpg","cdm (309)","jpg"],
+			[353,12019,707,707,86,71,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (270).jpg","cdm (270)","jpg"],
+			[353,13433,707,707,97,79,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (315).jpg","cdm (315)","jpg"],
+			[353,2121,707,707,279,228,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (94).jpg","cdm (94)","jpg"],
+			[353,3535,707,707,293,242,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (86).jpg","cdm (86)","jpg"],
+			[353,4949,707,707,332,269,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (45).jpg","cdm (45)","jpg"],
+			[353,6363,707,707,223,184,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (263).jpg","cdm (263)","jpg"],
+			[353,707,707,707,394,322,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (165).jpg","cdm (165)","jpg"],
+			[353,7777,707,707,314,251,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (40).jpg","cdm (40)","jpg"],
+			[353,9191,707,707,25,21,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (35).jpg","cdm (35)","jpg"],
+			[3535,0,707,707,198,162,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (244).jpg","cdm (244)","jpg"],
+			[3535,11312,707,707,411,339,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (173).jpg","cdm (173)","jpg"],
+			[3535,12726,707,707,63,51,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (285).jpg","cdm (285)","jpg"],
+			[3535,1414,707,707,441,363,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (189).jpg","cdm (189)","jpg"],
+			[3535,14140,707,2,92,75,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (296).jpg","cdm (296)","jpg"],
+			[3535,2828,707,707,207,168,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (250).jpg","cdm (250)","jpg"],
+			[3535,4242,707,707,177,142,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (227).jpg","cdm (227)","jpg"],
+			[3535,5656,707,707,142,115,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (19).jpg","cdm (19)","jpg"],
+			[3535,7070,707,707,347,282,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (135).jpg","cdm (135)","jpg"],
+			[3535,8484,707,707,378,310,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (146).jpg","cdm (146)","jpg"],
+			[3535,9898,707,707,171,136,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (221).jpg","cdm (221)","jpg"],
+			[3888,10605,707,707,398,326,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (176).jpg","cdm (176)","jpg"],
+			[3888,12019,707,707,319,256,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (49).jpg","cdm (49)","jpg"],
+			[3888,13433,707,707,437,359,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (178).jpg","cdm (178)","jpg"],
+			[3888,2121,707,707,217,178,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (245).jpg","cdm (245)","jpg"],
+			[3888,3535,707,707,157,128,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (21).jpg","cdm (21)","jpg"],
+			[3888,4949,707,707,368,301,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (112).jpg","cdm (112)","jpg"],
+			[3888,6363,707,707,145,118,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (197).jpg","cdm (197)","jpg"],
+			[3888,707,707,707,153,124,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (190).jpg","cdm (190)","jpg"],
+			[3888,7777,707,707,119,98,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (302).jpg","cdm (302)","jpg"],
+			[3888,9191,707,707,69,57,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (276).jpg","cdm (276)","jpg"],
+			[4242,0,707,707,374,307,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (140).jpg","cdm (140)","jpg"],
+			[4242,11312,707,707,158,129,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (213).jpg","cdm (213)","jpg"],
+			[4242,12726,707,707,318,255,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (354).jpg","cdm (354)","jpg"],
+			[4242,1414,707,707,126,105,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (216).jpg","cdm (216)","jpg"],
+			[4242,14140,707,2,251,206,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (79).jpg","cdm (79)","jpg"],
+			[4242,2828,707,707,355,290,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (128).jpg","cdm (128)","jpg"],
+			[4242,4242,707,707,421,349,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (164).jpg","cdm (164)","jpg"],
+			[4242,5656,707,707,274,223,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (62).jpg","cdm (62)","jpg"],
+			[4242,7070,707,707,143,116,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (191).jpg","cdm (191)","jpg"],
+			[4242,8484,707,707,353,288,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (122).jpg","cdm (122)","jpg"],
+			[4242,9898,707,707,178,143,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (22).jpg","cdm (22)","jpg"],
+			[4595,10605,707,707,156,127,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (206).jpg","cdm (206)","jpg"],
+			[4595,12019,707,707,240,197,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (55).jpg","cdm (55)","jpg"],
+			[4595,13433,707,707,413,341,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (174).jpg","cdm (174)","jpg"],
+			[4595,2121,707,707,160,131,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (210).jpg","cdm (210)","jpg"],
+			[4595,3535,707,707,77,63,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (288).jpg","cdm (288)","jpg"],
+			[4595,4949,707,707,385,314,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (142).jpg","cdm (142)","jpg"],
+			[4595,6363,707,707,289,238,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (91).jpg","cdm (91)","jpg"],
+			[4595,707,707,707,195,160,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (241).jpg","cdm (241)","jpg"],
+			[4595,7777,707,707,122,101,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (30).jpg","cdm (30)","jpg"],
+			[4595,9191,707,707,342,279,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (126).jpg","cdm (126)","jpg"],
+			[4949,0,707,707,14,12,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (349).jpg","cdm (349)","jpg"],
+			[4949,11312,707,707,422,350,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (166).jpg","cdm (166)","jpg"],
+			[4949,12726,707,707,87,72,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (289).jpg","cdm (289)","jpg"],
+			[4949,1414,707,707,102,84,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (313).jpg","cdm (313)","jpg"],
+			[4949,14140,707,2,93,76,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (310).jpg","cdm (310)","jpg"],
+			[4949,2828,707,707,26,22,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (351).jpg","cdm (351)","jpg"],
+			[4949,4242,707,707,282,231,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (95).jpg","cdm (95)","jpg"],
+			[4949,5656,707,707,165,134,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (201).jpg","cdm (201)","jpg"],
+			[4949,7070,707,707,358,293,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (116).jpg","cdm (116)","jpg"],
+			[4949,8484,707,707,253,207,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (8).jpg","cdm (8)","jpg"],
+			[4949,9898,707,707,7,6,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (1).jpeg","cdm (1)","jpeg"],
+			[5302,10605,707,707,167,134,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (201).jpg","cdm (201)","jpg"],
+			[5302,12019,707,707,81,66,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (273).jpg","cdm (273)","jpg"],
+			[5302,13433,707,707,146,119,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (2).jpg","cdm (2)","jpg"],
+			[5302,2121,707,707,3,3,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (104).jpg","cdm (104)","jpg"],
+			[5302,3535,707,707,425,353,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (185).jpg","cdm (185)","jpg"],
+			[5302,4949,707,707,432,358,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (18).jpg","cdm (18)","jpg"],
+			[5302,6363,707,707,341,278,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (125).jpg","cdm (125)","jpg"],
+			[5302,707,707,707,100,82,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (317).jpg","cdm (317)","jpg"],
+			[5302,7777,707,707,211,172,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (232).jpg","cdm (232)","jpg"],
+			[5302,9191,707,707,292,241,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdmpunk.jpg","cdmpunk","jpg"],
+			[5656,0,707,707,110,92,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (300).jpg","cdm (300)","jpg"],
+			[5656,11312,707,707,387,315,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (145).jpg","cdm (145)","jpg"],
+			[5656,12726,707,707,262,214,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (69).jpg","cdm (69)","jpg"],
+			[5656,1414,707,707,96,78,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (314).jpg","cdm (314)","jpg"],
+			[5656,14140,707,2,155,126,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (199).jpg","cdm (199)","jpg"],
+			[5656,2828,707,707,71,59,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (28).jpg","cdm (28)","jpg"],
+			[5656,4242,707,707,404,332,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (151).jpg","cdm (151)","jpg"],
+			[5656,5656,707,707,61,49,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (299).jpg","cdm (299)","jpg"],
+			[5656,7070,707,707,412,340,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (150).jpg","cdm (150)","jpg"],
+			[5656,8484,707,707,194,159,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (233).jpg","cdm (233)","jpg"],
+			[5656,9898,707,707,423,351,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (181).jpg","cdm (181)","jpg"],
+			[6009,10605,707,707,237,194,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (71).jpg","cdm (71)","jpg"],
+			[6009,12019,707,707,409,337,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (169).jpg","cdm (169)","jpg"],
+			[6009,13433,707,707,372,305,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (133).jpg","cdm (133)","jpg"],
+			[6009,2121,707,707,20,16,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (331).jpg","cdm (331)","jpg"],
+			[6009,3535,707,707,276,225,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (9).jpg","cdm (9)","jpg"],
+			[6009,4949,707,707,16,12,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (349).jpg","cdm (349)","jpg"],
+			[6009,6363,707,707,139,112,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (212).jpg","cdm (212)","jpg"],
+			[6009,707,707,707,405,333,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (161).jpg","cdm (161)","jpg"],
+			[6009,7777,707,707,360,295,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (109).jpg","cdm (109)","jpg"],
+			[6009,9191,707,707,249,206,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (79).jpg","cdm (79)","jpg"],
+			[6363,0,707,707,308,249,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (38).jpg","cdm (38)","jpg"],
+			[6363,11312,707,707,290,239,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (93).jpg","cdm (93)","jpg"],
+			[6363,12726,707,707,170,135,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (220).jpg","cdm (220)","jpg"],
+			[6363,1414,707,707,428,356,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (180).jpg","cdm (180)","jpg"],
+			[6363,14140,707,2,436,358,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (18).jpg","cdm (18)","jpg"],
+			[6363,2828,707,707,90,75,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (296).jpg","cdm (296)","jpg"],
+			[6363,4242,707,707,244,201,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (75).jpg","cdm (75)","jpg"],
+			[6363,5656,707,707,1,1,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (102).jpg","cdm (102)","jpg"],
+			[6363,7070,707,707,113,92,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (300).jpg","cdm (300)","jpg"],
+			[6363,8484,707,707,144,117,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (195).jpg","cdm (195)","jpg"],
+			[6363,9898,707,707,284,233,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (90).jpg","cdm (90)","jpg"],
+			[6716,10605,707,707,115,94,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (322).jpg","cdm (322)","jpg"],
+			[6716,12019,707,707,396,324,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (172).jpg","cdm (172)","jpg"],
+			[6716,13433,707,707,101,83,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (3).jpg","cdm (3)","jpg"],
+			[6716,2121,707,707,391,319,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (167).jpg","cdm (167)","jpg"],
+			[6716,3535,707,707,402,330,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (16).jpg","cdm (16)","jpg"],
+			[6716,4949,707,707,135,111,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (200).jpg","cdm (200)","jpg"],
+			[6716,6363,707,707,201,162,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (244).jpg","cdm (244)","jpg"],
+			[6716,707,707,707,209,170,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (238).jpg","cdm (238)","jpg"],
+			[6716,7777,707,707,76,62,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (283).jpg","cdm (283)","jpg"],
+			[6716,9191,707,707,108,90,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (301).jpg","cdm (301)","jpg"],
+			[707,0,707,707,259,213,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (65).jpg","cdm (65)","jpg"],
+			[707,11312,707,707,416,344,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (160).jpg","cdm (160)","jpg"],
+			[707,12726,707,707,31,25,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (34).jpg","cdm (34)","jpg"],
+			[707,1414,707,707,335,272,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (42).jpg","cdm (42)","jpg"],
+			[707,14140,707,2,250,206,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (79).jpg","cdm (79)","jpg"],
+			[707,2828,707,707,285,234,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (83).jpg","cdm (83)","jpg"],
+			[707,4242,707,707,278,227,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (87).jpg","cdm (87)","jpg"],
+			[707,5656,707,707,321,258,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (50).jpg","cdm (50)","jpg"],
+			[707,7070,707,707,283,232,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (89).jpg","cdm (89)","jpg"],
+			[707,8484,707,707,213,174,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (234).jpg","cdm (234)","jpg"],
+			[707,9898,707,707,336,273,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (360).jpg","cdm (360)","jpg"],
+			[7070,0,707,707,50,44,6,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (297).jpg","cdm (297)","jpg"],
+			[7070,11312,707,707,427,355,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (187).jpg","cdm (187)","jpg"],
+			[7070,12726,707,707,417,345,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (162).jpg","cdm (162)","jpg"],
+			[7070,1414,707,707,180,145,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (223).jpg","cdm (223)","jpg"],
+			[7070,14140,707,2,375,307,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (140).jpg","cdm (140)","jpg"],
+			[7070,2828,707,707,188,153,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (258).jpg","cdm (258)","jpg"],
+			[7070,4242,707,707,105,87,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (320).jpg","cdm (320)","jpg"],
+			[7070,5656,707,707,75,62,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (283).jpg","cdm (283)","jpg"],
+			[7070,7070,707,707,114,93,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (319).jpg","cdm (319)","jpg"],
+			[7070,8484,707,707,40,34,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (344).jpg","cdm (344)","jpg"],
+			[7070,9898,707,707,32,26,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (330).jpg","cdm (330)","jpg"],
+			[7423,10605,707,707,440,362,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (183).jpg","cdm (183)","jpg"],
+			[7423,12019,707,707,424,352,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (179).jpg","cdm (179)","jpg"],
+			[7423,13433,707,707,225,186,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (267).jpg","cdm (267)","jpg"],
+			[7423,2121,707,707,338,275,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (120).jpg","cdm (120)","jpg"],
+			[7423,3535,707,707,369,302,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (129).jpg","cdm (129)","jpg"],
+			[7423,4949,707,707,309,249,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (38).jpg","cdm (38)","jpg"],
+			[7423,6363,707,707,127,106,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (207).jpg","cdm (207)","jpg"],
+			[7423,707,707,707,109,91,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (308).jpg","cdm (308)","jpg"],
+			[7423,7777,707,707,263,215,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (51).jpg","cdm (51)","jpg"],
+			[7423,9191,707,707,324,261,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (358).jpg","cdm (358)","jpg"],
+			[7777,0,707,707,365,300,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (121).jpg","cdm (121)","jpg"],
+			[7777,11312,707,707,265,216,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (52).jpg","cdm (52)","jpg"],
+			[7777,12726,707,707,182,147,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (218).jpg","cdm (218)","jpg"],
+			[7777,1414,707,707,72,60,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (279).jpg","cdm (279)","jpg"],
+			[7777,14140,707,2,346,281,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (108).jpg","cdm (108)","jpg"],
+			[7777,2828,707,707,99,81,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (316).jpg","cdm (316)","jpg"],
+			[7777,4242,707,707,58,47,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (271).jpg","cdm (271)","jpg"],
+			[7777,5656,707,707,228,189,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (26).jpg","cdm (26)","jpg"],
+			[7777,7070,707,707,83,68,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (278).jpg","cdm (278)","jpg"],
+			[7777,8484,707,707,329,266,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (43).jpg","cdm (43)","jpg"],
+			[7777,9898,707,707,2,2,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (103).jpg","cdm (103)","jpg"],
+			[8130,10605,707,707,5,5,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (107).jpg","cdm (107)","jpg"],
+			[8130,12019,707,707,205,166,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (25).jpg","cdm (25)","jpg"],
+			[8130,13433,707,707,357,292,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (130).jpg","cdm (130)","jpg"],
+			[8130,2121,707,707,418,346,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (152).jpg","cdm (152)","jpg"],
+			[8130,3535,707,707,57,46,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (280).jpg","cdm (280)","jpg"],
+			[8130,4949,707,707,291,240,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (97).jpg","cdm (97)","jpg"],
+			[8130,6363,707,707,359,294,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (134).jpg","cdm (134)","jpg"],
+			[8130,707,707,707,121,100,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (306).jpg","cdm (306)","jpg"],
+			[8130,7777,707,707,229,189,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (26).jpg","cdm (26)","jpg"],
+			[8130,9191,707,707,356,291,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (118).jpg","cdm (118)","jpg"],
+			[8484,0,707,707,163,134,7,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (201).jpg","cdm (201)","jpg"],
+			[8484,11312,707,707,380,312,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (141).jpg","cdm (141)","jpg"],
+			[8484,12726,707,707,377,309,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (144).jpg","cdm (144)","jpg"],
+			[8484,1414,707,707,190,155,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (246).jpg","cdm (246)","jpg"],
+			[8484,14140,707,2,94,76,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (310).jpg","cdm (310)","jpg"],
+			[8484,2828,707,707,343,280,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (132).jpg","cdm (132)","jpg"],
+			[8484,4242,707,707,15,12,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (349).jpg","cdm (349)","jpg"],
+			[8484,5656,707,707,401,329,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (177).jpg","cdm (177)","jpg"],
+			[8484,7070,707,707,294,243,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (99).jpg","cdm (99)","jpg"],
+			[8484,8484,707,707,186,151,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (255).jpg","cdm (255)","jpg"],
+			[8484,9898,707,707,370,303,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (13).jpg","cdm (13)","jpg"],
+			[8837,10605,707,707,13,11,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (100).jpg","cdm (100)","jpg"],
+			[8837,12019,707,707,317,254,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (48).jpg","cdm (48)","jpg"],
+			[8837,13433,707,707,232,189,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (26).jpg","cdm (26)","jpg"],
+			[8837,2121,707,707,392,320,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (149).jpg","cdm (149)","jpg"],
+			[8837,3535,707,707,74,62,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (283).jpg","cdm (283)","jpg"],
+			[8837,4949,707,707,419,347,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (153).jpg","cdm (153)","jpg"],
+			[8837,6363,707,707,399,327,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (170).jpg","cdm (170)","jpg"],
+			[8837,707,707,707,117,96,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (304).jpg","cdm (304)","jpg"],
+			[8837,7777,707,707,277,226,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (92).jpg","cdm (92)","jpg"],
+			[8837,9191,707,707,73,61,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (281).jpg","cdm (281)","jpg"],
+			[9191,0,707,707,246,203,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (76).jpg","cdm (76)","jpg"],
+			[9191,11312,707,707,311,249,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (38).jpg","cdm (38)","jpg"],
+			[9191,12726,707,707,62,50,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (277).jpg","cdm (277)","jpg"],
+			[9191,1414,707,707,98,80,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (311).jpg","cdm (311)","jpg"],
+			[9191,14140,707,2,296,245,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (85).jpg","cdm (85)","jpg"],
+			[9191,2828,707,707,6,6,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (1).jpeg","cdm (1)","jpeg"],
+			[9191,4242,707,707,141,114,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (204).jpg","cdm (204)","jpg"],
+			[9191,5656,707,707,4,4,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (106).jpg","cdm (106)","jpg"],
+			[9191,7070,707,707,150,121,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (202).jpg","cdm (202)","jpg"],
+			[9191,8484,707,707,331,268,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (44).jpg","cdm (44)","jpg"],
+			[9191,9898,707,707,64,52,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (29).jpg","cdm (29)","jpg"],
+			[9544,10605,707,707,230,189,5,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (26).jpg","cdm (26)","jpg"],
+			[9544,12019,707,707,243,200,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (74).jpg","cdm (74)","jpg"],
+			[9544,13433,707,707,339,276,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (113).jpg","cdm (113)","jpg"],
+			[9544,2121,707,707,161,132,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (192).jpg","cdm (192)","jpg"],
+			[9544,3535,707,707,420,348,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (163).jpg","cdm (163)","jpg"],
+			[9544,4949,707,707,12,10,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (105).jpg","cdm (105)","jpg"],
+			[9544,6363,707,707,128,106,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (207).jpg","cdm (207)","jpg"],
+			[9544,707,707,707,191,156,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (252).jpg","cdm (252)","jpg"],
+			[9544,7777,707,707,350,285,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (119).jpg","cdm (119)","jpg"],
+			[9544,9191,707,707,56,45,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (298).jpg","cdm (298)","jpg"],
+			[9898,0,707,707,111,92,4,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (300).jpg","cdm (300)","jpg"],
+			[9898,11312,707,707,268,217,3,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (53).jpg","cdm (53)","jpg"],
+			[9898,12726,707,707,179,144,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (229).jpg","cdm (229)","jpg"],
+			[9898,1414,707,707,129,107,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (193).jpg","cdm (193)","jpg"],
+			[9898,14140,707,2,352,287,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (110).jpg","cdm (110)","jpg"],
+			[9898,2828,707,707,208,169,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (251).jpg","cdm (251)","jpg"],
+			[9898,4242,707,707,212,173,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (231).jpg","cdm (231)","jpg"],
+			[9898,5656,707,707,162,133,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (215).jpg","cdm (215)","jpg"],
+			[9898,7070,707,707,216,177,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (242).jpg","cdm (242)","jpg"],
+			[9898,8484,707,707,264,215,2,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (51).jpg","cdm (51)","jpg"],
+			[9898,9898,707,707,439,361,1,"file:///D:/ART PROJECTS/365 CDM/drive-download-20240521T041210Z-001/output/cdm (184).jpg","cdm (184)","jpg"],
+		];
+
+        // Get the tile at the specified position x,y in pixels
+        var getTileObject = function (x,y) {
+            var l = tileArrays.length;
+            for (n=0; n<l; ++n) {
+                tileInfo = tileArrays[n];
+                if (tileInfo[0] <= x && tileInfo[0]+tileInfo[2] >= x && tileInfo[1] <= y && tileInfo[1]+tileInfo[3] >= y) {
+                    return { 
+                        tileLeft:tileInfo[0],
+                        tileTop:tileInfo[1],
+                        tileWidth:tileInfo[2],
+                        tileHeight:tileInfo[3],
+                        tileRight:tileInfo[0]+tileInfo[1],
+                        tileBottom:tileInfo[2]+tileInfo[3],
+                        tileNr:tileInfo[4],
+                        imageNr:tileInfo[5],
+                        imageUsageCount:tileInfo[6],
+                        imageUrl:tileInfo[7],
+                        imageName:tileInfo[8],
+                        imageExtension:tileInfo[9],
+                    };
+                }
+            }
+            return null; // not found
+        }
+
+        var showPopUpWindow = function(popUpText, callback) {
+            callback.showPopUp({maxWidth:300, popUpText:popUpText}, callback.args);
+        }
+
+        // This function builds the PopUp window information for the specified Tile. 
+        // Returns an object with following members:
+        //  maxWidth: maximum width of the popup window.
+        //  popUpText: HTML text to show in the popup window.
+        var getPopUpFullText = function (x,y,callback) {
+            var tile = getTileObject(x,y);
+            popUpText = tile === null ? "No information available" :
+                        (tile.imageUrl == null? '' : '<a href="' + tile.imageUrl + '" target="TileImage"><img src="' + tile.imageUrl + '" width=300 /><br></a>')
+                        + 'Tile Nr.: ' + tile.tileNr + '<br>'
+                        + 'Tile Size: ' + tile.tileWidth + ' x ' + tile.tileHeight + '<br>'
+                        + 'Tile Position: ' + tile.tileLeft + ' x ' + tile.tileTop + '<br>'
+                        + 'Image Nr.: ' + tile.imageNr + '<br>'
+                        + 'Image Name: ' + tile.imageName + '<br>'
+                        + 'Image Extension: ' + tile.imageExtension + '<br>'
+                        + 'Image Usage Count: ' + tile.imageUsageCount + '<br>';
+            showPopUpWindow(popUpText,callback);
+        };
+
+        // PopUp showing only the image
+        var getPopUpImageOnly = function (x,y,callback) {
+            var tile = getTileObject(x,y);
+            popUpText = tile === null || tile.imageUrl === null ? "No information available" : '<a href="' + tile.imageUrl + '" target="TileImage"><img src="' + tile.imageUrl + '" width=300 /><br></a>';
+            showPopUpWindow(popUpText,callback);
+        };
+
+        // PopUp showing the image with name and usage count
+        var getPopUpImageWithName = function (x,y,callback) {
+            var tile = getTileObject(x,y);
+            popUpText = tile === null || tile.imageUrl === null ? "No information available" : '<a href="' + tile.imageUrl + '" target="TileImage"><img src="' + tile.imageUrl + '" width=300 /><br></a>' 
+                + '<center>' + tile.imageName + ' (used ' + tile.imageUsageCount + ' times)</center>';
+            showPopUpWindow(popUpText,callback);
+        };
+
+        // PopUp showing only ImageNr
+        var getPopUpTextOnly = function (x,y,callback) {
+            var tile = getTileObject(x,y);
+            popUpText = tile === null || tile.imageUrl === null ? "No information available" : '<center>image #' + tile.imageNr + ' used ' + tile.imageUsageCount + ' times</center>'; 
+            showPopUpWindow(popUpText,callback);
+        };
+
+        // Get the Help Text to show when clicking on the ? button
+        var getHelpText = function () {
+            return {
+                maxWidth: 500,
+                minWidth: 300,
+                popUpText:    '<table class="help-table"><thead><tr><th></th><th>Mouse</th><th>Touchscreen</th><th>Keyboard</th></tr></thead><tbody>' 
+                            + '<tr><td>Zoom In</td><td>Wheel or Doubleclick</td><td>Enlarge with two Fingers</td><td>+</td></tr><tr>'
+                            + '<tr><td>Zoom Out</td><td>Wheel or Shift + Doubleclick</td><td>Reduce with two Fingers</td><td>-</td></tr><tr>'
+                            + '<tr><td>Pan</td><td>Left Click + Move</td><td>Short Press + Move</td><td>Arrow Keys</td></tr><tr>'
+                            + '<tr><td>Show Info</td><td>Right Click</td><td>Long Press</td><td></td></tr><tr>'
+                            + '<tr><td>Hide Info</td><td>Left Click on map</td><td>Short Press on map</td><td>Esc</td></tr><tr>'
+                            + '<tr><td>Zoom area</td><td>Left Click + Shift + Move</td><td></td><td></td></tr><tr>'
+                            + '</tbody></table>',
+            }
+        }; 
+
+        // This function builds the search text.
+        // This function is invoked once when loading the mosaic.
+        // It returns an array with 3 elements: x,y,title.
+        // If two tiles have the same title then it will be displayed only once in the search list.
+        var getSearchText = function () {
+            var l = tileArrays.length;
+            var searchList = new Array(l);
+            for (n=0; n<l; ++n) {
+                tileInfo = tileArrays[n];
+                searchList[n] = [tileInfo[0]+tileInfo[2]/2, tileInfo[1]+tileInfo[3]/2, tileInfo[8]];
+            }
+            return searchList;
+        };
+
+        // Map Options
+        var mapOptions = {
+            getPopUpText: getPopUpImageOnly, // function that retrieves the HTML text to show for a tile. Can be null to avoid popup.
+            getHelpText: getHelpText, // function that retrieves the HTML text to show as PopUp for a help. (can be null to hide the ? button)
+            attribution: "Mosaic created by Nuclear Samurai", // set my own attribution text, as html text. Can be null to have no additional attribution.
+            keepPopUpInView: true, // if true the map will autopan so that the popup window is awlays shown.
+            fullscreenControl: !navigator.vendor.match(/apple/i),
+            getSearchText: getSearchText,    // function that retrieves the text of each tile that will be searched. Null to avoid search.
+            searchMiddleOfText: true, // false: search elements only by initial text
+            searchCaseInsensitive: true, // false: search elements in case sensitive text
+            searchAutocomplete: true, // complete input with first suggested result and select this filled-in text.
+            searchAutoHideMarker: true, // remove circle and marker on search control collapsed
+            searchMarkerFound: null, // specify a L.Icon or null for the default
+            searchText:'Tile...', // text for the Search
+            searchTextError:'Tile not found',    //error message
+            searchTextCancel: 'Cancel',          //title in cancel button        
+            searchTextPlaceholder: 'Search Tile...',   //placeholder value         
+            searchContainer: '', // container id to insert Search Control
+            zoomControl: true, // false to not show a zoom control with +/- buttons
+            panInertia: null, // can be null, true or false. Inertia feels nice on touchscreen devices
+            panInertiaDeceleration: null, // can be null or a value in pixels/second.
+        };
+
+        // Show the Mosaic
+        ShowAndreaMosaic(
+            'AndreaMosaic', // Div ID
+            'mosaic/', // Base URL of the Mosaic Tiles
+            14142, // Width in Pixels
+            14142, // Height in Pixels
+            mapOptions
+            );
+    </script>
+</body>
+</html>
